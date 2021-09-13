@@ -1,3 +1,24 @@
+--[[
+The MIT License
+
+Copyright (c) 2009-2012 Norman Clarke
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+]]
+
 --- Telescope is a test library for Lua that allows for flexible, declarative
 -- tests. The documentation produced here is intended largely for developers
 -- working on Telescope.  For information on using Telescope, please visit the
@@ -7,9 +28,8 @@
 -- @module 'telescope'
 local _M = {}
 
-local compat_env = require 'telescope.compat_env'
+local compat_env = require "compat_env"
 
-local getfenv = _G.getfenv or compat_env.getfenv
 local setfenv = _G.setfenv or compat_env.setfenv
 
 
@@ -163,9 +183,9 @@ local function make_assertion(name, message, func)
           error(string.format('assert_%s expected %d arguments but got %d', name, num_vars, #args))
         end
       end
-      for i = 1, nargs do a[i] = tostring(v) end
-      for i = nargs+1, num_vars do a[i] = 'nil' end
-      return (assertion_message_prefix .. message):format(unpack(a))
+      for i, v in ipairs(args) do a[i] = tostring(v) end
+      for i = #a + 1, num_vars do a[i] = 'nil' end
+      return (assertion_message_prefix .. message):format(table.unpack(a))
     end
   end
 
@@ -492,7 +512,7 @@ local function test_report(contexts, results)
   local previous_level       = 0
   local status_format_len    = 3
   local status_format        = "[%s]"
-  local width                = 72
+  local width                = 100
   local context_name_format  = "%-" .. width - status_format_len .. "s"
   local function_name_format = "%-" .. width - status_format_len .. "s"
 
